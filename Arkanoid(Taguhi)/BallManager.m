@@ -46,6 +46,7 @@
             invertedVector = CGVectorMake(-directionVector.dx, directionVector.dy);
             break;
         default:
+            invertedVector = CGVectorMake(0, 0);
             break;
     }
     return invertedVector;

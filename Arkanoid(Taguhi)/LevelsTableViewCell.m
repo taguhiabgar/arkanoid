@@ -23,6 +23,7 @@
 }
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
     [self.levelNameLabel setText:self.levelName];
 }
 
