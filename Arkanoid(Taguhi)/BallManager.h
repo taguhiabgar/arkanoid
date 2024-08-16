@@ -27,7 +27,7 @@
 - (CGFloat)yCoordinateOfPointWithXCoordinate:(CGFloat)xCoordinate onLineFrom:(CGPoint)startPoint to:(CGPoint)destinationPoint;
 // invert direction vector
 - (CGVector)invertDirectionVector:(CGVector)directionVector AfterHittingWall:(WallType)wall;
-// make vector by two point
+// make vector from two points
 - (CGVector)vectorFrom:(CGPoint)startPoint to:(CGPoint)endPoint;
 // get size of ball
 - (CGSize)ballSize;

@@ -29,7 +29,6 @@
 
 - (void)setLevelName:(NSString *)levelName
 {
-    _levelName = levelName;
     [self.levelNameLabel setText:levelName];  
 }
 
