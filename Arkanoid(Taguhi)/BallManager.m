@@ -25,7 +25,7 @@
     return sharedInstance;
 }
 
-- (CGVector)invertDirectionVector:(CGVector)directionVector AfterHittingWall:(WallType)wall;
+- (CGVector)invertDirectionVector:(CGVector)directionVector AfterHittingWall:(WallType)wall
 {
     CGVector invertedVector;
     switch (wall)
@@ -34,19 +34,15 @@
             invertedVector = directionVector;
             break;
         case TopWall:
-            invertedVector = CGVectorMake(directionVector.dx, -directionVector.dy);
-            break;
         case BottomWall:
             invertedVector = CGVectorMake(directionVector.dx, -directionVector.dy);
             break;
         case LeftWall:
-            invertedVector = CGVectorMake(-directionVector.dx, directionVector.dy);
-            break;
         case RightWall:
             invertedVector = CGVectorMake(-directionVector.dx, directionVector.dy);
             break;
         default:
-            invertedVector = CGVectorMake(0, 0);
+            invertedVector = CGVectorMake(0, 0); // Consider logging or handling this case.
             break;
     }
     return invertedVector;
@@ -59,7 +55,7 @@
     CGFloat x2 = destinationPoint.x;
     CGFloat y2 = destinationPoint.y;
     CGFloat y3 = yCoordinate;
-    CGFloat x3 = x2 + (y2 - y3) * (x2 - x1) / (y1 - y2);
+    CGFloat x3 = x1 + (y3 - y1) * (x2 - x1) / (y2 - y1);
     return x3;
 }
 
@@ -70,7 +66,7 @@
     CGFloat x2 = destinationPoint.x;
     CGFloat y2 = destinationPoint.y;
     CGFloat x3 = xCoordinate;
-    CGFloat y3 = y2 + (y2 - y1) * (x2 - x3) / (x1 - x2);
+    CGFloat y3 = y1 + (x3 - x1) * (y2 - y1) / (x2 - x1);
     return y3;
 }
 
@@ -91,18 +87,31 @@
     return [self normalizeVector:_directionVector];
 }
 
+//- (CGVector)normalizeVector:(CGVector)vector
+//{
+//    CGFloat length = sqrt(vector.dx * vector.dx + vector.dy * vector.dy);
+//    if (length > self.unit) {
+//        CGFloat scale = self.unit / length;
+//        return CGVectorMake(vector.dx * scale, vector.dy * scale);
+//    } else {
+//        return vector;
+//    }
+//}
+
 - (CGVector)normalizeVector:(CGVector)vector
 {
-    if (vector.dx > self.unit || vector.dy > self.unit) {
-        if (vector.dx < vector.dy) {
-            return CGVectorMake(self.unit * vector.dx / vector.dy, self.unit);
-        } else {
-            return CGVectorMake(self.unit, self.unit * vector.dy / vector.dx);
-        }
-    } else {
-        return vector;
+    CGFloat length = sqrt(vector.dx * vector.dx + vector.dy * vector.dy);
+    if (length > self.unit)
+    {
+        CGFloat scale = self.unit / length;
+        return CGVectorMake(vector.dx * scale, vector.dy * scale);
+    }
+    else
+    {
+        return vector; // No scaling needed
     }
 }
+
 
 - (CGSize)ballSize
 {
@@ -110,11 +119,17 @@
     return CGSizeMake(ballWidthAndHeight, ballWidthAndHeight);
 }
 
-- (CGFloat)timeByBallVelocity:(CGFloat)velocity andDistance:(CGFloat)distance;
+- (CGFloat)timeByBallVelocity:(CGFloat)velocity andDistance:(CGFloat)distance
 {
+    if (velocity == 0)
+    {
+        return CGFLOAT_MAX;
+    }
+    
     CGFloat time = distance / velocity;
     return time;
 }
+
 
 - (CGFloat)ballVelocity
 {
@@ -123,7 +138,9 @@
 
 - (CGFloat)distanceFrom:(CGPoint)firstPoint to:(CGPoint)secondPoint
 {
-    return sqrt((secondPoint.x - firstPoint.x) * (secondPoint.x - firstPoint.x) + (secondPoint.y - firstPoint.y) * (secondPoint.y - firstPoint.y));
+    CGFloat dx = secondPoint.x - firstPoint.x;
+    CGFloat dy = secondPoint.y - firstPoint.y;
+    return sqrt(dx * dx + dy * dy);
 }
 
 @end
