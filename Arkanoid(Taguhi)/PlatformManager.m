@@ -22,24 +22,28 @@
     return sharedInstance;
 }
 
-// returns (0,0) point if ball falls below platform
-- (CGVector)directionVectorAfterHittingPlatform:(CGRect)platformFrame ballFrame:(CGRect)ballFrame directionVector:(CGVector)ballDirectionVector
+// Returns (0,0) point if the ball falls below the platform
+- (CGVector)directionVectorAfterHittingPlatform:(CGRect)platformFrame
+                                      ballFrame:(CGRect)ballFrame
+                              directionVector:(CGVector)ballDirectionVector
 {
     CGFloat heightForDirectionVector = [self heightForDirectionVector];
-    // if ball falls below platform
+    
+    // Check if the ball is within the horizontal bounds of the platform
     if (ballFrame.origin.x + ballFrame.size.width < platformFrame.origin.x ||
         platformFrame.origin.x + platformFrame.size.width < ballFrame.origin.x)
     {
-        return CGVectorMake(0, 0);
+        return CGVectorMake(0, 0); // Ball is not hitting the platform
     }
     else
     {
-        CGFloat ballCenterXCoordinate = ballFrame.origin.x + ballFrame.size.width / CoefficientForHeight;
+        // Calculate center coordinates
+        CGFloat ballCenterXCoordinate = ballFrame.origin.x + ballFrame.size.width / 2.0;
         CGFloat platformCenterXCoordinate = platformFrame.origin.x + platformFrame.size.width / 2.0;
         
-        if (platformCenterXCoordinate >= ballCenterXCoordinate - Epsilon && platformCenterXCoordinate <= ballCenterXCoordinate + Epsilon) {
-            // --hit platform at center point
-            // invert ball's direction vector
+        // Check if the ball is hitting near the center of the platform
+        if (fabs(platformCenterXCoordinate - ballCenterXCoordinate) <= Epsilon) {
+            // Ball hits the platform at or near the center
             return CGVectorMake(ballDirectionVector.dx, -ballDirectionVector.dy);
         }
         else
@@ -48,8 +52,9 @@
             CGPoint endPoint = CGPointMake(ballCenterXCoordinate, platformFrame.origin.y - heightForDirectionVector);
             return [self vectorByStartPoint:startPoint andEndPoint:endPoint];
         }
-    }    
+    }
 }
+
 
 - (CGVector)vectorByStartPoint:(CGPoint)startPoint andEndPoint:(CGPoint)endPoint
 {
